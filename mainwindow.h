@@ -6,6 +6,7 @@
 #include "managerworker.h"
 #include <QPushButton>
 #include "databaseadapter.h"
+#include <QMap>
 
 namespace Ui {
 class MainWindow;
@@ -36,12 +37,14 @@ private:
     Ui::MainWindow *ui;
     QString types[3] = {"Employee","Manage","Sales"};
     BaseWorker * currentWorker;
+    QList<int> workerIdList;
 
     void setAdminElementsVisible(bool state);
     void setPersonalManageElementsVisible(bool state);
     void setMyPageVisible(bool state);
     void fillUsersTable();
     void fillWorkersTable();
+    void fillWorkersList();
 };
 
 #endif // MAINWINDOW_H

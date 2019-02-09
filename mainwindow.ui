@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1076</width>
-    <height>466</height>
+    <height>496</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -198,7 +198,7 @@
          <widget class="QLineEdit" name="newPassword"/>
         </item>
         <item row="2" column="1" colspan="6">
-         <widget class="QComboBox" name="comboBox"/>
+         <widget class="QComboBox" name="workerList"/>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_3">

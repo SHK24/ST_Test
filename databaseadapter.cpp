@@ -141,16 +141,13 @@ int DataBaseAdapter::addNewUser(QString userName, QString password, int workerId
 {
     if (!sdb.open()) return OPEN_DATABASE_ERROR;
 
-    if(workerId == 0)
-    {
-        QString queryText = "INSERT INTO users('userName','hash') values('" + userName + "','" + QCryptographicHash::hash(password.toUtf8(),QCryptographicHash::Md5) + "')";
-        doQuery(queryText);
-    }
-    else
-    {
-        QString queryText = "INSERT INTO users('userName','hash','worker_id') values('" + userName + "','" + QCryptographicHash::hash(password.toUtf8(),QCryptographicHash::Md5) + "','" + QString::number(workerId) + "')";
-        doQuery(queryText);
-    }
+    QString queryText = "INSERT into users('id','userName','hash') values('%id%', '%userName%', '%hash%')";
+
+    queryText.replace("%id%",QString::number(workerId));                                                    //Замена шаблона имени настоящим именем работника
+    queryText.replace("%userName%",userName);                                                               //Замена шаблона имени настоящим именем работника
+    queryText.replace("%hash%",QCryptographicHash::hash(password.toUtf8(),QCryptographicHash::Md5));        //Замена шаблона даты поступления настоящей датой
+
+    doQuery(queryText);
 
     return 0;
 }
@@ -172,8 +169,8 @@ UserData DataBaseAdapter::getUserData(QString userName)
     QString queryText;
     QSqlQuery query;
 
-    userData.userName = "NO_USER";
-    userData.hash     = "NO_PASSWD";
+    userData.userName = "";
+    userData.hash     = "";
 
     if (!sdb.open()) return userData;
 

@@ -26,9 +26,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     int a = 5;*/
 
-    setAdminElementsVisible(false);
-    setPersonalManageElementsVisible(false);
-    setMyPageVisible(false);
+    fillWorkersList();
+
+    //setAdminElementsVisible(false);
+    //setPersonalManageElementsVisible(false);
+    //setMyPageVisible(false);
 
     //UserData userData = dbAdapter.getUserData("test1");
     UserData userData = dbAdapter.getUserData("admin");
@@ -253,8 +255,30 @@ void MainWindow::fillWorkersTable()
     }
 }
 
+void MainWindow::fillWorkersList()
+{
+    DB_Table result = dbAdapter.getTable("SELECT workerName,Workers.id FROM EmployeeWorkers,Workers WHERE EmployeeWorkers.id = Workers.EmployeeID",2);
+
+    for(int i = 0 ; i < result.rowCount;i++)
+    {
+        ui->workerList->addItem("[Employee] " + result.table[i][0] + " ID:" + result.table[i][1]);
+        workerIdList.append(result.table[i][1].toInt());
+    }
+
+//    result = dbAdapter.getTable("SELECT workerName,id FROM ManageWorkers",2);
+
+//    for(int i = 0 ; i < result.rowCount;i++)
+//        ui->workerList->addItem("[Manage] " + result.table[i][0]);
+
+//    result = dbAdapter.getTable("SELECT workerName,id FROM SalesWorkers",2);
+
+//    for(int i = 0 ; i < result.rowCount;i++)
+//        ui->workerList->addItem("[Sales] " + result.table[i][0]);
+}
+
 void MainWindow::on_add_clicked()
 {
+    dbAdapter.addNewUser(ui->newUserName->text(), ui->newPassword->text(),workerIdList[ui->workerList->currentIndex()]);
     //addUser(ui->newUserName->text(), ui->newPassword->text());
 }
 
