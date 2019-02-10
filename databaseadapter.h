@@ -11,9 +11,9 @@
 #define CASH 2
 #define MASTER  3
 
-#define IS_IMPLOYEE query.value(1).toString() != ""
-#define IS_MANAGE   query.value(2).toString() != ""
-#define IS_SALES    query.value(3).toString() != ""
+#define IS_IMPLOYEE query.value(0).toString() != ""
+#define IS_MANAGE   query.value(1).toString() != ""
+#define IS_SALES    query.value(2).toString() != ""
 
 struct DB_Table
 {
@@ -57,7 +57,7 @@ public:
 
     UserData getUserData(QString userName);
 
-    int getLastWorkerId();
+    int getLastWorkerId(QString tableName);
 };
 
 #endif // DATABASEADAPTER_H

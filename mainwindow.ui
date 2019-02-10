@@ -201,7 +201,7 @@
          <widget class="QComboBox" name="workerList"/>
         </item>
         <item row="2" column="0">
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="workerList_label">
           <property name="text">
            <string>Владелец:</string>
           </property>

@@ -28,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     fillWorkersList();
 
-    //setAdminElementsVisible(false);
-    //setPersonalManageElementsVisible(false);
-    //setMyPageVisible(false);
+    setAdminElementsVisible(false);
+    setPersonalManageElementsVisible(false);
+    setMyPageVisible(false);
 
     //UserData userData = dbAdapter.getUserData("test1");
     UserData userData = dbAdapter.getUserData("admin");
@@ -63,7 +63,7 @@ void MainWindow::on_doLogin_clicked()
     QString userName = ui->userName->text();
     QString password = ui->password->text();
 
-    UserData userData = dbAdapter.getUserData("admin");
+    UserData userData = dbAdapter.getUserData(ui->userName->text());
 
     if(userData.userName == "") return;
 
@@ -84,6 +84,8 @@ void MainWindow::on_doLogin_clicked()
     {
         if(QCryptographicHash::hash(password.toUtf8(),QCryptographicHash::Md5) == userData.hash)
         {
+            setMyPageVisible(true);
+
             switch(userData.type.toInt())
             {
                 case EMPLOYEE:
@@ -98,10 +100,7 @@ void MainWindow::on_doLogin_clicked()
                 {
                     ManagerWorker temp(userData.fio,userData.basePay,QDate::fromString(userData.date,"dd.MM.yyyy"),0);
 
-                    //ManagerWorker * temp = new ManagerWorker(userData.fio,userData.basePay,QDate::fromString(userData.date,"dd.MM.yyyy"),0);
-                    //currentWorker = (BaseWorker*)&temp;
-
-                    QString sqlQuery = "SELECT FIO,TYPE,DATE,BASEPAY FROM workers WHERE MASTER = " + QString::number(userData.workerId);
+                    QString sqlQuery = "SELECT workerName,date,cash FROM EmployeeWorkers WHERE master = " + QString::number(userData.workerId);
                     DB_Table table = dbAdapter.getTable(sqlQuery,4);
 
                     ui->subordinatesTable->setRowCount(table.rowCount);
@@ -186,6 +185,9 @@ void MainWindow::setPersonalManageElementsVisible(bool state)
 
     ui->addWorker->setVisible(state);
     ui->deleteWorker->setVisible(state);
+
+    ui->workerList->setVisible(state);
+    ui->workerList_label->setVisible(state);
 }
 
 void MainWindow::setMyPageVisible(bool state)
@@ -265,15 +267,21 @@ void MainWindow::fillWorkersList()
         workerIdList.append(result.table[i][1].toInt());
     }
 
-//    result = dbAdapter.getTable("SELECT workerName,id FROM ManageWorkers",2);
+    result = dbAdapter.getTable("SELECT workerName,Workers.id FROM ManageWorkers,Workers WHERE ManageWorkers.id = Workers.ManageID",2);
 
-//    for(int i = 0 ; i < result.rowCount;i++)
-//        ui->workerList->addItem("[Manage] " + result.table[i][0]);
+    for(int i = 0 ; i < result.rowCount;i++)
+    {
+        ui->workerList->addItem("[Manage] " + result.table[i][0] + " ID:" + result.table[i][1]);
+        workerIdList.append(result.table[i][1].toInt());
+    }
 
-//    result = dbAdapter.getTable("SELECT workerName,id FROM SalesWorkers",2);
+    result = dbAdapter.getTable("SELECT workerName,Workers.id FROM SalesWorkers,Workers WHERE SalesWorkers.id = Workers.SalesID",2);
 
-//    for(int i = 0 ; i < result.rowCount;i++)
-//        ui->workerList->addItem("[Sales] " + result.table[i][0]);
+    for(int i = 0 ; i < result.rowCount;i++)
+    {
+        ui->workerList->addItem("[Sales] " + result.table[i][0] + " ID:" + result.table[i][1]);
+        workerIdList.append(result.table[i][1].toInt());
+    }
 }
 
 void MainWindow::on_add_clicked()
@@ -285,35 +293,48 @@ void MainWindow::on_add_clicked()
 void MainWindow::on_addWorker_clicked()
 {
     QString tableName = "";
+    QString type = "";
 
     switch(ui->workerType->currentIndex())
     {
         case EMPLOYEE:
         {
             tableName = "EmployeeWorkers";
+            type = "Employee";
         }break;
 
         case MANAGE:
         {
             tableName = "ManageWorkers";
+            type = "Manage";
         }break;
 
         case SALES:
         {
             tableName = "SalesWorkers";
+            type = "Sales";
         }break;
     }
 
     dbAdapter.addNewWorker(tableName,ui->workerName->text(),ui->date->text(),ui->basePay->text().toInt(),0);
 
+    if(ui->createUserAcc->isChecked())
+    {
+        QString queryText = "SELECT workers.id FROM Workers,%tableName% WHERE workerName='%workerName%' AND date='%date%' AND Workers.%type%ID = %tableName%.id";
+
+        queryText = queryText.replace("%tableName%",tableName);
+        queryText = queryText.replace("%workerName%",ui->workerName->text());
+        queryText = queryText.replace("%date%",ui->date->text());
+        queryText = queryText.replace("%type%",type);
+
+        int lastID = dbAdapter.getTable(queryText,1).table[0][0].toInt();
+
+        dbAdapter.addNewUser(ui->newUserNamePM->text(),ui->newUserPasswordPM->text(),lastID);
+        fillUsersTable();
+    }
+
     fillWorkersTable();
 
 //    dbAdapter.addNewWorker(ui->workerName->text(),ui->workerType->currentIndex(),ui->date->text(),ui->basePay->text().toInt());
 //    fillWorkersTable();
-
-//    if(ui->createUserAcc->isChecked())
-//    {
-//        dbAdapter.addNewUser(ui->newUserNamePM->text(),ui->newUserPasswordPM->text(),dbAdapter.getLastWorkerId());
-//        fillUsersTable();
-//    }
 }

@@ -190,9 +190,9 @@ UserData DataBaseAdapter::getUserData(QString userName)
 
         query.next();
 
-        if(IS_IMPLOYEE) queryText = "SELECT workerName, date, cash, master FROM EmployeeWorkers WHERE id=" + query.value(1).toString();
+        if(IS_IMPLOYEE) queryText = "SELECT workerName, date, cash, master FROM EmployeeWorkers WHERE id=" + query.value(0).toString();
         if(IS_MANAGE)   queryText = "SELECT workerName, date, cash, master FROM ManageWorkers WHERE id="   + query.value(1).toString();
-        if(IS_SALES)    queryText = "SELECT workerName, date, cash, master FROM SalesWorkers WHERE id="    + query.value(1).toString();
+        if(IS_SALES)    queryText = "SELECT workerName, date, cash, master FROM SalesWorkers WHERE id="    + query.value(2).toString();
 
         query.exec(queryText);
 
@@ -209,7 +209,7 @@ UserData DataBaseAdapter::getUserData(QString userName)
     return userData;
 }
 
-int DataBaseAdapter::getLastWorkerId()
+int DataBaseAdapter::getLastWorkerId(QString tableName)
 {
     return lastWorkerID;
 }
