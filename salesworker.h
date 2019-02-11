@@ -3,12 +3,11 @@
 
 #include "managerworker.h"
 
-class SalesWorker : BaseWorker
+class SalesWorker : public BaseWorker
 {
 public:
-    SalesWorker();
-    virtual void   addSubordinate(BaseWorker subordinate);
-    virtual double calculatePay();
+    SalesWorker(QString name, int basePay, QDate date);
+    virtual double calculatePay(QDate date);
 };
 
 #endif // SALESWORKER_H

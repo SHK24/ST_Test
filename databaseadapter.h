@@ -11,6 +11,10 @@
 #define CASH 2
 #define MASTER  3
 
+#define EMPLOYEE 0
+#define MANAGE   1
+#define SALES    2
+
 #define IS_IMPLOYEE query.value(0).toString() != ""
 #define IS_MANAGE   query.value(1).toString() != ""
 #define IS_SALES    query.value(2).toString() != ""
@@ -51,13 +55,16 @@ public:
     DB_Table getTable(QString queryText, int columnsCount);
 
     int addNewWorker(QString tableName,QString workerName, QString date, int basePay,int master);
-    int addNewUser(QString userName, QString password, int workerId=0);
+    int addNewUser(QString userName, QString password, int workerId);
 
     int doQuery(QString queryText);
 
     UserData getUserData(QString userName);
+    UserData getWorkerData(int workerID);
 
-    int getLastWorkerId(QString tableName);
+    int getLastWorkerId();
+
+    DB_Table getSubordinates(int masterID);
 };
 
 #endif // DATABASEADAPTER_H

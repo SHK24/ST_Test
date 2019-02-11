@@ -6,9 +6,8 @@
 class EmployeeWorker : public BaseWorker
 {
 public:
-    void setMaster(BaseWorker master);
-    double calculatePay();
-    EmployeeWorker(QString name, int basePay, QDate date,int additionalPart);
+    double calculatePay(QDate date);
+    EmployeeWorker(QString name, int basePay, QDate date);
 };
 
 #endif // EMPLOYEEWORKER_H

@@ -27,7 +27,7 @@ DB_Table DataBaseAdapter::getManageWorkersTable()
 
 DB_Table DataBaseAdapter::getSalesWorkersTable()
 {
-    return getTable("SELECT workerName,date,cash FROM SalesWorkers",4);
+    return getTable("SELECT workerName,date,cash,master FROM SalesWorkers",4);
 }
 
 DB_Table DataBaseAdapter::getUsersTable()
@@ -141,6 +141,7 @@ int DataBaseAdapter::addNewUser(QString userName, QString password, int workerId
 {
     if (!sdb.open()) return OPEN_DATABASE_ERROR;
 
+
     QString queryText = "INSERT into users('id','userName','hash') values('%id%', '%userName%', '%hash%')";
 
     queryText.replace("%id%",QString::number(workerId));                                                    //Замена шаблона имени настоящим именем работника
@@ -185,23 +186,12 @@ UserData DataBaseAdapter::getUserData(QString userName)
 
     if(query.value(0).toString() != "")
     {
-        queryText = "SELECT EmployeeID,ManageID,SalesID FROM workers WHERE id = '"+query.value(0).toString()+"'";
-        query.exec(queryText);
-
-        query.next();
-
-        if(IS_IMPLOYEE) queryText = "SELECT workerName, date, cash, master FROM EmployeeWorkers WHERE id=" + query.value(0).toString();
-        if(IS_MANAGE)   queryText = "SELECT workerName, date, cash, master FROM ManageWorkers WHERE id="   + query.value(1).toString();
-        if(IS_SALES)    queryText = "SELECT workerName, date, cash, master FROM SalesWorkers WHERE id="    + query.value(2).toString();
-
-        query.exec(queryText);
-
-        query.next();
-
-        userData.fio      = query.value(0).toString();
-        userData.date     = query.value(1).toString();
-        userData.basePay  = query.value(2).toInt();
-        userData.master   = query.value(3).toInt();
+        UserData temp    = getWorkerData(query.value(0).toInt());
+        userData.fio     = temp.fio;
+        userData.date    = temp.date;
+        userData.basePay = temp.basePay;
+        userData.master  = temp.master;
+        userData.type    = temp.type;
     }
 
     //sdb.close();
@@ -209,7 +199,59 @@ UserData DataBaseAdapter::getUserData(QString userName)
     return userData;
 }
 
-int DataBaseAdapter::getLastWorkerId(QString tableName)
+UserData DataBaseAdapter::getWorkerData(int workerID)
+{
+    UserData userData;
+    QString queryText;
+    QSqlQuery query;
+
+    userData.userName = "";
+    userData.hash     = "";
+
+    if (!sdb.open()) return userData;
+
+    queryText = "SELECT EmployeeID,ManageID,SalesID FROM workers WHERE id = '"+QString::number(workerID)+"'";
+    query.exec(queryText);
+
+    query.next();
+
+    if(IS_IMPLOYEE)
+    {
+        queryText = "SELECT workerName, date, cash, master FROM EmployeeWorkers WHERE id=" + query.value(0).toString();
+        userData.type = "0";
+    }
+    if(IS_MANAGE)
+    {
+        queryText = "SELECT workerName, date, cash, master FROM ManageWorkers WHERE id="   + query.value(1).toString();
+        userData.type = "1";
+    }
+    if(IS_SALES)
+    {
+        queryText = "SELECT workerName, date, cash, master FROM SalesWorkers WHERE id="    + query.value(2).toString();
+        userData.type = "2";
+    }
+
+    query.exec(queryText);
+
+    query.next();
+
+    userData.fio      = query.value(0).toString();
+    userData.date     = query.value(1).toString();
+    userData.basePay  = query.value(2).toInt();
+    userData.master   = query.value(3).toInt();
+
+    return userData;
+}
+
+int DataBaseAdapter::getLastWorkerId()
 {
     return lastWorkerID;
+}
+
+DB_Table DataBaseAdapter::getSubordinates(int masterID)
+{
+    QString sqlQuery = "SELECT workerName,date,cash FROM EmployeeWorkers WHERE EmployeeWorkers.master = %masterID% UNION SELECT workerName,date,cash FROM SalesWorkers WHERE SalesWorkers.master = %masterID% UNION SELECT workerName,date,cash FROM ManageWorkers WHERE ManageWorkers.master = %masterID%";
+    sqlQuery = sqlQuery.replace("%masterID%",QString::number(masterID));
+
+    return getTable(sqlQuery,3);
 }

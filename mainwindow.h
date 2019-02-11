@@ -38,6 +38,7 @@ private:
     QString types[3] = {"Employee","Manage","Sales"};
     BaseWorker * currentWorker;
     QList<int> workerIdList;
+    QList<int> masterIdList;
 
     void setAdminElementsVisible(bool state);
     void setPersonalManageElementsVisible(bool state);
@@ -45,6 +46,7 @@ private:
     void fillUsersTable();
     void fillWorkersTable();
     void fillWorkersList();
+    void fillMasterList();
 };
 
 #endif // MAINWINDOW_H

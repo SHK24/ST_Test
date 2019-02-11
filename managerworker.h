@@ -1,16 +1,14 @@
 #ifndef MANAGERWORKER_H
 #define MANAGERWORKER_H
 
-#include "employeeworker.h"
+#include "baseworker.h"
 
-class ManagerWorker : BaseWorker
+class ManagerWorker : public BaseWorker
 {
 
 public:
-    void   setMaster(BaseWorker master);
-    void   addSubordinate(BaseWorker *subordinate);
-    double calculatePay();
-    ManagerWorker(QString name, int basePay, QDate date,int additionalPart);
+    ManagerWorker(QString name, int basePay, QDate date);
+    double calculatePay(QDate date);
 };
 
 #endif // MANAGERWORKER_H

@@ -1,30 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#define EMPLOYEE 0
-#define MANAGE   1
-#define SALES    2
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    /*QDate dd(2010,2,27);
-    EmployeeWorker worker("Иванов Петр Владимирович",10000,dd,10);
-    EmployeeWorker worker1("Иванов Петр Иванович",20000,dd,10);
-    EmployeeWorker worker2("Иванов Алексей Владимирович",30000,dd,10);
-
-    ManagerWorker manager("Иванов Владимир Владимирович",100000,dd,10);
-
-    manager.addSubordinate(&worker);
-    manager.addSubordinate(&worker1);
-    manager.addSubordinate(&worker2);
-
-    int pay = manager.calculatePay();
-
-    int a = 5;*/
 
     fillWorkersList();
 
@@ -42,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->userName->setText("admin");
         ui->doLogin->setVisible(false);
     }
+    else ui->setAdminPasswd->setVisible(false);
 
     ui->employeeWorkersTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->manageWorkersTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -75,6 +57,7 @@ void MainWindow::on_doLogin_clicked()
             setPersonalManageElementsVisible(true);
             fillWorkersTable();
             fillUsersTable();
+            fillMasterList();
         }
 
         return;
@@ -92,31 +75,29 @@ void MainWindow::on_doLogin_clicked()
                 {
                     QDate date = QDate::fromString(userData.date,"dd.MM.yyyy");
 
-                    EmployeeWorker worker(userData.userName,userData.basePay,date,0);
-                    ui->currentPayment->setText(QString::number(worker.calculatePay(),'f',3));
+                    EmployeeWorker worker(userData.userName,userData.basePay,date);
+                    ui->currentPayment->setText(QString::number(worker.calculatePay(QDate::currentDate()),'f',3));
                 }break;
 
                 case MANAGE:
                 {
-                    ManagerWorker temp(userData.fio,userData.basePay,QDate::fromString(userData.date,"dd.MM.yyyy"),0);
+                    ManagerWorker temp(userData.fio,userData.basePay,QDate::fromString(userData.date,"dd.MM.yyyy"));
 
-                    QString sqlQuery = "SELECT workerName,date,cash FROM EmployeeWorkers WHERE master = " + QString::number(userData.workerId);
-                    DB_Table table = dbAdapter.getTable(sqlQuery,4);
+                    DB_Table table = dbAdapter.getSubordinates(userData.workerId);
 
                     ui->subordinatesTable->setRowCount(table.rowCount);
                     ui->subordinatesTable->setColumnCount(table.colCount);
 
                     for(int i = 0; i < table.rowCount;i++)
                     {
-                        temp.addSubordinate(new EmployeeWorker(table.table[i][0],table.table[i][3].toInt(),QDate::fromString(table.table[i][2],"dd.MM.yyyy"),0));
+                        temp.addSubordinate(new EmployeeWorker(table.table[i][0],table.table[i][1].toInt(),QDate::fromString(table.table[i][2],"dd.MM.yyyy")));
 
                         ui->subordinatesTable->setItem(i,0,new QTableWidgetItem(table.table[i][0]));
-                        ui->subordinatesTable->setItem(i,1,new QTableWidgetItem(types[table.table[1]->toInt()]));
+                        ui->subordinatesTable->setItem(i,1,new QTableWidgetItem(table.table[i][1]));
                         ui->subordinatesTable->setItem(i,2,new QTableWidgetItem(table.table[i][2]));
-                        ui->subordinatesTable->setItem(i,3,new QTableWidgetItem(table.table[i][3]));
                     }
 
-                    ui->currentPayment->setText(QString::number(temp.calculatePay(),'f',3));
+                    ui->currentPayment->setText(QString::number(temp.calculatePay(QDate::currentDate()),'f',3));
 
                     ui->tabWidget->setCurrentIndex(3);
 
@@ -133,7 +114,7 @@ void MainWindow::on_doLogin_clicked()
 
 void MainWindow::on_setAdminPasswd_clicked()
 {
-    dbAdapter.addNewUser("admin",ui->password->text());
+    dbAdapter.addNewUser("admin",ui->password->text(),0);
 }
 
 void MainWindow::setAdminElementsVisible(bool state)
@@ -284,6 +265,27 @@ void MainWindow::fillWorkersList()
     }
 }
 
+void MainWindow::fillMasterList()
+{
+    DB_Table result = dbAdapter.getTable("SELECT workerName,Workers.id FROM EmployeeWorkers,Workers WHERE EmployeeWorkers.id = Workers.EmployeeID",2);
+
+    result = dbAdapter.getTable("SELECT workerName,Workers.id FROM ManageWorkers,Workers WHERE ManageWorkers.id = Workers.ManageID",2);
+
+    for(int i = 0 ; i < result.rowCount;i++)
+    {
+        ui->master->addItem("[Manage] " + result.table[i][0] + " ID:" + result.table[i][1]);
+        masterIdList.append(result.table[i][1].toInt());
+    }
+
+    result = dbAdapter.getTable("SELECT workerName,Workers.id FROM SalesWorkers,Workers WHERE SalesWorkers.id = Workers.SalesID",2);
+
+    for(int i = 0 ; i < result.rowCount;i++)
+    {
+        ui->master->addItem("[Sales] " + result.table[i][0] + " ID:" + result.table[i][1]);
+        masterIdList.append(result.table[i][1].toInt());
+    }
+}
+
 void MainWindow::on_add_clicked()
 {
     dbAdapter.addNewUser(ui->newUserName->text(), ui->newPassword->text(),workerIdList[ui->workerList->currentIndex()]);
@@ -316,7 +318,9 @@ void MainWindow::on_addWorker_clicked()
         }break;
     }
 
-    dbAdapter.addNewWorker(tableName,ui->workerName->text(),ui->date->text(),ui->basePay->text().toInt(),0);
+    if(ui->master->currentIndex() > 0)
+    dbAdapter.addNewWorker(tableName,ui->workerName->text(),ui->date->text(),ui->basePay->text().toInt(),masterIdList[ui->master->currentIndex() - 1]);
+    else dbAdapter.addNewWorker(tableName,ui->workerName->text(),ui->date->text(),ui->basePay->text().toInt(),0);
 
     if(ui->createUserAcc->isChecked())
     {

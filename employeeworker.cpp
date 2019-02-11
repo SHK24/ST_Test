@@ -1,6 +1,6 @@
 #include "employeeworker.h"
 
-EmployeeWorker::EmployeeWorker(QString name, int basePay, QDate date,int additionalPart)
+EmployeeWorker::EmployeeWorker(QString name, int basePay, QDate date)
 {
     this->name = name;
     this->basePay = basePay;
@@ -8,15 +8,9 @@ EmployeeWorker::EmployeeWorker(QString name, int basePay, QDate date,int additio
     this->additionalPart = additionalPart;
 }
 
-
-void EmployeeWorker::setMaster(BaseWorker master)
+double EmployeeWorker::calculatePay(QDate date)
 {
-    this->master = &master;
-}
-
-double EmployeeWorker::calculatePay()
-{
-    int years = QDate::currentDate().year() - this->date.year();
+    int years = this->date.daysTo(date) / 365;
 
     int percents = years * 3;
 

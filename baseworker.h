@@ -4,12 +4,12 @@
 #include <QList>
 #include <QString>
 #include <QDate>
+#include <../ST_test/databaseadapter.h>
 
 class BaseWorker
 {
 protected:
     QString name;
-
     int basePay;
     QDate date;
 
@@ -22,9 +22,19 @@ private:
 
 public:
     BaseWorker();
-    virtual void   setMaster(BaseWorker master);
-    virtual void   addSubordinate(BaseWorker subordinate);
-    virtual double calculatePay();
+    void   setMaster(BaseWorker * master);
+    void   addSubordinate(BaseWorker * subordinate);
+    virtual double calculatePay(QDate date);
+
+    void setName(QString name);
+    void setBasePay(int pay);
+    void setDate(QDate date);
+
+    QString getName();
+    int     getBasePay();
+    QDate   getDate();
+    BaseWorker*   getMaster();
+    QList<BaseWorker*> getSubordinates();
 };
 
 #endif // BASEWORKER_H

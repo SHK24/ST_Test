@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ST_Test</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -21,7 +21,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideNone</enum>
@@ -190,7 +190,7 @@
            <string>Требуется вход с правами администратора</string>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignHCenter|Qt::AlignTop</set>
           </property>
          </widget>
         </item>
@@ -214,41 +214,10 @@
         <string>Управление списком сотрудников</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="8" column="0">
-         <widget class="QLabel" name="salesWorkersTable_label">
+        <item row="1" column="0">
+         <widget class="QLabel" name="workerName_label">
           <property name="text">
-           <string>Sales:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="manageWorkersTable_label">
-          <property name="text">
-           <string>Manage:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="EmployeeWorkersTable_label">
-          <property name="text">
-           <string>Employee:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3" rowspan="2" colspan="2">
-         <widget class="QDateEdit" name="date">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5" rowspan="2">
-         <widget class="QLabel" name="basePay_label">
-          <property name="text">
-           <string>Базовая ставка</string>
+           <string>ФИО</string>
           </property>
          </widget>
         </item>
@@ -262,35 +231,48 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="5">
-         <widget class="QLabel" name="newUserPasswordPM_label">
-          <property name="text">
-           <string> Пароль</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="workerName_label">
-          <property name="text">
-           <string>ФИО</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QCheckBox" name="createUserAcc">
-          <property name="text">
-           <string>Создать учетную запись</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2" rowspan="2">
+        <item row="1" column="2">
          <widget class="QLabel" name="date_label">
           <property name="text">
            <string>Дата поступления</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="12">
+        <item row="1" column="3">
+         <widget class="QDateEdit" name="date">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QLabel" name="basePay_label">
+          <property name="text">
+           <string>Базовая ставка</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="5">
+         <widget class="QLineEdit" name="basePay">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <widget class="QLabel" name="workerType_label">
+          <property name="text">
+           <string>Должность</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="7">
          <widget class="QComboBox" name="workerType">
           <property name="minimumSize">
            <size>
@@ -315,55 +297,14 @@
           </item>
          </widget>
         </item>
-        <item row="3" column="12">
-         <widget class="QPushButton" name="deleteWorker">
+        <item row="1" column="8">
+         <widget class="QLabel" name="master_label">
           <property name="text">
-           <string>Удалить</string>
+           <string>Начальник</string>
           </property>
          </widget>
         </item>
         <item row="1" column="9">
-         <widget class="QLabel" name="workerType_label">
-          <property name="text">
-           <string>Должность</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="6">
-         <widget class="QLineEdit" name="newUserPasswordPM">
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLineEdit" name="newUserNamePM">
-          <property name="maximumSize">
-           <size>
-            <width>200</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLabel" name="newUserNamePM_label">
-          <property name="text">
-           <string>Имя учетной записи</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="9">
-         <widget class="QPushButton" name="addWorker">
-          <property name="text">
-           <string>Добавить</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="14">
          <widget class="QComboBox" name="master">
           <property name="minimumSize">
            <size>
@@ -371,41 +312,14 @@
             <height>0</height>
            </size>
           </property>
+          <item>
+           <property name="text">
+            <string>Отсутствует</string>
+           </property>
+          </item>
          </widget>
         </item>
-        <item row="1" column="6" rowspan="2" colspan="3">
-         <widget class="QLineEdit" name="basePay">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="13">
-         <widget class="QLabel" name="master_label">
-          <property name="text">
-           <string>Начальник</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="15">
-         <widget class="QLabel" name="warning_2">
-          <property name="font">
-           <font>
-            <pointsize>16</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>Требуется вход с правами администратора</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="15">
+        <item row="1" column="10">
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -418,7 +332,69 @@
           </property>
          </spacer>
         </item>
-        <item row="5" column="0" colspan="16">
+        <item row="2" column="0" colspan="2">
+         <widget class="QCheckBox" name="createUserAcc">
+          <property name="text">
+           <string>Создать учетную запись</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QLabel" name="newUserNamePM_label">
+          <property name="text">
+           <string>Имя учетной записи</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QLineEdit" name="newUserNamePM">
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QLabel" name="newUserPasswordPM_label">
+          <property name="text">
+           <string> Пароль</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLineEdit" name="newUserPasswordPM">
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QPushButton" name="addWorker">
+          <property name="text">
+           <string>Добавить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="7">
+         <widget class="QPushButton" name="deleteWorker">
+          <property name="text">
+           <string>Удалить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="EmployeeWorkersTable_label">
+          <property name="text">
+           <string>Employee:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="11">
          <widget class="QTableWidget" name="employeeWorkersTable">
           <column>
            <property name="text">
@@ -442,7 +418,14 @@
           </column>
          </widget>
         </item>
-        <item row="7" column="0" colspan="16">
+        <item row="5" column="0">
+         <widget class="QLabel" name="manageWorkersTable_label">
+          <property name="text">
+           <string>Manage:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="11">
          <widget class="QTableWidget" name="manageWorkersTable">
           <column>
            <property name="text">
@@ -466,7 +449,14 @@
           </column>
          </widget>
         </item>
-        <item row="9" column="0" colspan="16">
+        <item row="7" column="0">
+         <widget class="QLabel" name="salesWorkersTable_label">
+          <property name="text">
+           <string>Sales:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="11">
          <widget class="QTableWidget" name="salesWorkersTable">
           <column>
            <property name="text">
@@ -490,6 +480,21 @@
           </column>
          </widget>
         </item>
+        <item row="0" column="0" colspan="11">
+         <widget class="QLabel" name="warning_2">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Требуется вход с правами администратора</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_4">
@@ -505,6 +510,21 @@
             <height>12312312</height>
            </size>
           </property>
+          <column>
+           <property name="text">
+            <string>Имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Дата</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Заработная плата</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item row="3" column="0">
@@ -583,24 +603,6 @@
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1076</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
